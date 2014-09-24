@@ -6,7 +6,7 @@ ml
 This package implement classic machine learning algorithms. Motivations for this project includes:
 
 1. Help machine learning freshman to have a better and deeper understanding of the basic algorithms and model in this field.
-2. Provide the battery-included code and data for ML prototyping.
+2. Provide the `battery-included` code and data for ML prototyping.
 
 Following algorithms and models will be implemented in this package. 
 For some of them, `NumPy` support is necessary.
@@ -23,6 +23,11 @@ The default implementation is extremely slow.
 8. Matrix Factorization
 9. Neural Network
 10. Optimization
+
+##Naive Bayes
+
+
+
 
 ##Matrix Factorization
 
