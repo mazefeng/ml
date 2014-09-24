@@ -9,8 +9,8 @@ This package implement classic machine learning algorithms. Motivations for this
 2. Provide the battery-included code and data for ML prototyping.
 
 Following algorithms and models will be implemented in this package. 
-For some of them, `NumPy` support and necessary.
-Please ensure to configure `NumPy` with advanced implementations of basic linear algebra(BLAS, ATLAS, LAPACK). 
+For some of them, `NumPy` support is necessary.
+Ensure to configure `NumPy` with advanced linear algebra implementations(`BLAS`, `ATLAS`, `Lapack`). 
 The default implementation is extremely slow.
 
 1. Naive Bayes
@@ -24,7 +24,6 @@ The default implementation is extremely slow.
 9. Nerual Network
 10. Optimization
 
-##Naive Bayes
 
 
 
