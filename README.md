@@ -21,7 +21,7 @@ The default implementation is extremely slow.
 6. Support Vector Machines
 7. AdaBoost
 8. Matrix Factorization
-9. Nerual Network
+9. Neural Network
 10. Optimization
 
 ##Matrix Factorization
