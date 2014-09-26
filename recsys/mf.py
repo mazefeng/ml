@@ -142,7 +142,7 @@ class MF:
                 sqr_err.append(float(err.T * err) / self.batch_size)
 
             rmse = math.sqrt(np.mean(np.matrix(sqr_err)))
-            sys.stderr.write('Iter: %d\tRMSE: %f\n' % (i, rmse))
+            sys.stderr.write('Iter: %d\t\t\tRMSE: %f\n' % (i, rmse))
 
             if i > 0 and i % 10 ==0: self.dump_model('model_%d' % (i))
             
@@ -230,8 +230,8 @@ def read_sparse_matrix(fp_data, rows = None, cols = None):
  
 if __name__ == '__main__':
  
-    train_data = 'ml-1m/ratings.dat.train'
-    test_data = 'ml-1m/ratings.dat.test'
+    train_data = 'data/ml-1m/ratings.dat.train'
+    test_data = 'data/ml-1m/ratings.dat.test'
 
     train_ratings = read_sparse_matrix(open(train_data))
     test_ratings = read_sparse_matrix(open(test_data), train_ratings.rows, train_ratings.cols)

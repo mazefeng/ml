@@ -2,6 +2,7 @@
 
 import sys
 from math import log
+from common import read_data
 
 '''
 Event model:
@@ -99,25 +100,10 @@ class NaiveBayes:
         return 1.0 * correct / len(Y)
 
 
-def read_data(fp_data):
-    X, Y = list(), list()
-
-    for line in fp_data:
-        line_arr = line.strip().split()
-        Y.append(line_arr[0])
-        x = list()
-        for kv in line_arr[1 : ]:
-            w, c = kv.split(':')
-            x.append([w, float(c)])
-        X.append(x)
-
-    return X, Y
-
-
 if __name__ == '__main__':
 
-    train_path = 'data/20_newsgroups.data.train'
-    test_path = 'data/20_newsgroups.data.test'
+    train_path = 'data/20_newsgroups.train'
+    test_path = 'data/20_newsgroups.test'
 
     X_train, Y_train = read_data(open(train_path))
     X_test, Y_test = read_data(open(test_path))
