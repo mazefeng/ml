@@ -67,20 +67,20 @@ It is easy to convert a DT to a rule-set. Check `data/dt.rule_set` for the rule-
 
 <p>
 <code>
-IF (mac) THEN 
-  IF (ide) THEN 
-    PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 8]
-  ELSE 
-    IF (controller) THEN 
-      PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 5]
-    ELSE 
-      IF (difference) THEN 
-        IF (people) THEN 
-          PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
-        ELSE 
-          PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 13]
+    IF (mac) THEN 
+      IF (ide) THEN 
+        PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 8]
       ELSE 
-        PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 156]
+        IF (controller) THEN 
+          PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 5]
+        ELSE 
+          IF (difference) THEN 
+            IF (people) THEN 
+              PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
+            ELSE 
+              PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 13]
+          ELSE 
+            PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 156]
 </code>
 </p>
 
