@@ -65,7 +65,7 @@ Accuracy for `ID3` on this small dataset is `80.973451%`
 
 It is easy to convert a DT to a rule-set. Check `data/dt.rule_set` for the rule-set learned by DT, like:
 
-<p>
+<pre>
 <code>
     IF (mac) THEN 
       IF (ide) THEN 
@@ -82,7 +82,7 @@ It is easy to convert a DT to a rule-set. Check `data/dt.rule_set` for the rule-
           ELSE 
             PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 156]
 </code>
-</p>
+</pre>
 
 ##Matrix Factorization
 
