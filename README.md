@@ -86,11 +86,13 @@ It is easy to convert a DT to a rule-set. Check `data/dt.rule_set` for the rule-
 
 ##Matrix Factorization
 
-recsys/mf.py implements matrix factorization(MF) algorithms for recommendation.
+recsys/mf.py implements `matrix factorization`(MF) algorithms for recommendation.
 
 Run `python recsys/mf.py` to train and test MF on the `1 million` version of `MovieLens` dataset.
 
 RMSE on the test data is `0.932806` after `5 iterations`.
 
+MF is optimized by `Stochastic Gradient Descent`(SGD) algorithm in mini-batch manner. 
+By combining `NumPy` with mini-batch, the training algorithm is very efficient with an affordable memory cost.
 
 
