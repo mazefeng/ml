@@ -87,7 +87,7 @@ It is easy to convert a DT to a rule-set. Check `data/dt.rule_set` for the rule-
 
 ##Perceptron
 
-perceptron.py implements `perceptron learning algorithm`(PLA) and its variant `Pocket` for binary classification.
+perceptron.py implements `Perceptron Learning Algorithm`(PLA) and its variant `Pocket` for binary classification.
 
 Run `python perceptron.py` to train and test PLA and `Pocket` on `heart-scale` dataset.
 
@@ -103,8 +103,8 @@ otherwise, substract it from w.
 and this is how the name `Pocket` come from.
 
 PLA and `Pocket` are very old-fashioned ml technics, but they are very important, 
-they are the foundations of Support Vector Machines and Neural Network. 
-Further more, the weighted version of `Pocket` will be used as the weak classifier as `AdaBoost`.
+they are the foundations of Support Vector Machines and Neural Network, 
+further more, the weighted version of `Pocket` will be used as the weak classifier of `AdaBoost`.
 
 ##Matrix Factorization
 
