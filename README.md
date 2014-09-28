@@ -84,6 +84,28 @@ It is easy to convert a DT to a rule-set. Check `data/dt.rule_set` for the rule-
 </code>
 </pre>
 
+
+##Perceptron
+
+perceptron.py implements `perceptron learning algorithm`(PLA) and its variant `Pocket` for binary classification.
+
+Run `python perceptron.py` to train and test PLA and `Pocket` on `heart-scale` dataset.
+
+Accuracy for Perceptron: `75.471698%`
+
+Accuracy for `Pocket` : `81.132075%`
+
+PLA is one of the simplest machine learning algorithm: 
+whenever a mistake happens, if the model misclassify a positive sample as negative, PLA adds the x to the w;
+otherwise, substract it from w.
+
+`Pocket` is the upgrade version of PLA: it always keep a copy of the best model after each update, 
+and this is how the name `Pocket` come from.
+
+PLA and `Pocket` are very old-fashioned ml technics, but they are very important, 
+they are the foundations of Support Vector Machines and Neural Network. 
+Further more, the weighted version of `Pocket` will be used as the weak classifier as `AdaBoost`.
+
 ##Matrix Factorization
 
 recsys/mf.py implements `matrix factorization`(MF) algorithms for recommendation.
@@ -94,5 +116,15 @@ RMSE on the test data is `0.932806` after `5 iterations`.
 
 MF is optimized by `Stochastic Gradient Descent`(SGD) algorithm in mini-batch manner. 
 By combining `NumPy` with mini-batch, the training algorithm is very efficient with an affordable memory cost.
+
+##Hidden Markov Model
+
+hmm.py implements `Hidden Markov Models`(HMM) for solving `sequence labeling` problem.
+
+Run `python hmm.py` to train and test HMM on POS-tagging dataset.
+
+
+
+
 
 
