@@ -134,7 +134,11 @@ Accuracy for baseline tagger: `91.661447%`
 
 Accuracy for `Viterbi` tagger: `93.490334%`
 
-
+<pre><code>
+P--V-----V-----T---V----D--------N-------I----N---I---P----N---C------N-----`-----N-----P----N-------N-----.-'-
+|  |     |     |   |    |        |       |    |   |   |    |   |      |     |     |     |    |       |     | | 
+I was appalled to read the misstatements of facts in your Oct. 13 editorial `` Colombia 's Brave Publisher . ''
+</code></pre>
 
 
 
