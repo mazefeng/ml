@@ -104,7 +104,7 @@ and this is how the name `Pocket` come from.
 
 PLA and `Pocket` are very old-fashioned ml technics, but they are very important, 
 they are the foundations of Support Vector Machines and Neural Network, 
-further more, the weighted version of `Pocket` will be used as the weak classifier of `AdaBoost`.
+and the weighted version of `Pocket` will be used as the weak classifier of `AdaBoost`.
 
 ##Matrix Factorization
 
@@ -119,9 +119,21 @@ By combining `NumPy` with mini-batch, the training algorithm is very efficient w
 
 ##Hidden Markov Model
 
-hmm.py implements `Hidden Markov Models`(HMM) for solving `sequence labeling` problem.
+hmm.py implements `Hidden Markov Models`(HMMs) for solving `sequence labeling` problem.
 
-Run `python hmm.py` to train and test HMM on POS-tagging dataset.
+Run `python hmm.py` to train and test POS-tagger using trigram HMMs on a small corpus.
+
+HMMs is trained by `Maximum Likelihood Estimated`(MLE), and smooth technics is necessary for good performance.
+
+Using HMMs for labeling sequence is a little difficult. The brute force solution is not sufficient enough, 
+thus a `Dynamic Programming`(DP) algorithm is used here: the famous `Viterbi` algorithm.
+
+For comparasion, a baseline tagger is also implemented by ignore the state transition probability. 
+
+Accuracy for baseline tagger: `91.661447%`
+
+Accuracy for `Viterbi` tagger: `93.490334%`
+
 
 
 
