@@ -135,9 +135,9 @@ Accuracy for baseline tagger: `91.661447%`
 Accuracy for `Viterbi` tagger: `93.490334%`
 
 <pre><code>
-P--V-----V-----T---V----D--------N-------I----N---I---P----N---C------N-----`-----N-----P----N-------N-----.-'-
-|  |     |     |   |    |        |       |    |   |   |    |   |      |     |     |     |    |       |     | | 
-I was appalled to read the misstatements of facts in your Oct. 13 editorial `` Colombia 's Brave Publisher . ''
+P--V---D------J----------N-------W---V-----V-----I----D---N--------N------,--R---D---J----N---.
+|  |   |      |          |       |   |     |     |    |   |        |      |  |   |   |    |   |
+It is the right-wing guerrillas who are aligned with the drug traffickers , not the left wing .
 </code></pre>
 
 
