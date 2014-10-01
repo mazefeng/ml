@@ -120,6 +120,8 @@ In face recognition problem, a `decision stump` is adopted as the weak classifie
 
 Here we use a weighted version of the `Pocket` as weak classfier, run `python adaboost.py` to train and test AdaBoost on `heart-scale` dataset.
 
+Accuracy for AdaBoost : `86.792453%`
+
 ##Matrix Factorization
 
 recsys/mf.py implements `matrix factorization`(MF) algorithms for recommendation.
