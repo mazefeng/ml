@@ -105,6 +105,21 @@ PLA and `Pocket` are very old-fashioned ml technics, but they are very important
 they are the foundations of Support Vector Machines and Neural Network, 
 and the weighted version of `Pocket` will be used as the weak classifier of `AdaBoost`.
 
+##AdaBoost
+
+adaboost.py implements `Adaptive Boosting`(AdaBoost) algorithm for classification.
+
+The most famous application of AdaBoost is face recognition: by combining AdaBoost with `Haar-like` features, the face recognition algorithm achieves state-of-the-art accuracy and speed.
+
+AdaBoost boost the classifier accuracy by maintaining a weight distribution on the samples. 
+On each round, a weak classifier is trained on the weighted samples. And the weights of samples which are misclassified by the previous weak classifier are increased, the others are decreased. It can be proofed that, after enough round, the loss of AdaBoost go exactly to 0 (without outliar). Of course, this often leads to overfitting.
+
+When making a prediction, all the weak classifier make a weighted majority vote.
+
+In face recognition problem, a `decision stump` is adopted as the weak classifier, which is a decision tree with only 1 level. But AdaBoost itself make no restriction on the weak classifier being used. It only require the weak classifier can be trained on the weighted samples, and many classifier can be modified to handle this situation.
+
+Here we use a weighted version of the `Pocket` as weak classfier, run `python adaboost.py` to train and test AdaBoost on `heart-scale` dataset.
+
 ##Matrix Factorization
 
 recsys/mf.py implements `matrix factorization`(MF) algorithms for recommendation.
