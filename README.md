@@ -22,7 +22,8 @@ The default implementation is extremely slow.
 7. AdaBoost
 8. Matrix Factorization
 9. Neural Network
-10. Optimization
+10. Hidden Markov Models
+11. Optimization
 
 ##Naive Bayes
 
@@ -65,24 +66,22 @@ Accuracy for `ID3` on this small dataset is `80.973451%`
 
 It is easy to convert a DT to a rule-set. Check `data/dt.rule_set` for the rule-set learned by DT, like:
 
-<pre>
-<code>
-    IF (mac) THEN 
-      IF (ide) THEN 
-        PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 8]
-      ELSE 
-        IF (controller) THEN 
-          PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 5]
+<pre><code>
+IF (mac) THEN 
+  IF (ide) THEN 
+    PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 8]
+  ELSE 
+    IF (controller) THEN 
+      PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 5]
+    ELSE 
+      IF (difference) THEN 
+        IF (people) THEN 
+          PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
         ELSE 
-          IF (difference) THEN 
-            IF (people) THEN 
-              PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
-            ELSE 
-              PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 13]
-          ELSE 
-            PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 156]
-</code>
-</pre>
+          PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 13]
+      ELSE 
+        PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 156]
+</code></pre>
 
 
 ##Perceptron
@@ -140,7 +139,7 @@ P--V---D------J----------N-------W---V-----V-----I----D---N--------N------,--R--
 It is the right-wing guerrillas who are aligned with the drug traffickers , not the left wing .
 </code></pre>
 
-
+`TODO`: Parallel HMMs training, `Max Entropy Markov Models`(MEMM), `Conditional Random Field`(CRF)
 
 
 
