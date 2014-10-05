@@ -119,8 +119,8 @@ The fully implemented algorithm is repositoried in another GitHub project https:
 which is written in C++, and the input data format is the same as LibSVM/LibLinear.
 
 This SMO implementation simplify the original one in the following 3 ways:
-1. Choose lagrangian multipliers for sub-problems at random instead of using the heuristic methods, 
-this only effect the speed of convergence.
+
+1. Choose lagrangian multipliers for sub-problems at random instead of using the heuristic methods, this only effect the speed of convergence.
 2. Error cache mechanism isn't implemented.
 3. Kernel matrix is pre-computed and stored in memory. This couldn't be done for large scale problem.
 
@@ -130,15 +130,21 @@ Pegasos works in primal space, so only linear kernel is available.
 Run `python svm.py` to train and test SVMs on `heart-scale` dataset
 
 For `Pegasos`, 
+
 Training accuracy : `77.419355%`
+
 Test accuracy : `88.679245%`
 
 For `linear SMO`, 
+
 Training accuracy : 84.792627%
+
 Test accuracy : 86.792453%
 
 For `rbf kernel SMO`, 
+
 Training accuracy : 87.557604%
+
 Test accuracy : 90.566038%`
 
 ##AdaBoost
