@@ -17,13 +17,14 @@ The default implementation is extremely slow.
 2. Decision Tree
 3. Perceptron
 4. Linear Regression
-5. Logistic Regression
-6. Support Vector Machines
-7. AdaBoost
-8. Matrix Factorization
-9. Neural Network
-10. Hidden Markov Models
-11. Optimization
+5. Gaussian Discriminant Analysis
+6. Logistic Regression
+7. Support Vector Machines
+8. AdaBoost
+9. Matrix Factorization
+10. Neural Network
+11. Hidden Markov Models
+12. Optimization
 
 ##Naive Bayes
 
@@ -112,7 +113,7 @@ regression.py implements `Linear regression` model, in particular, `Ridge regres
 
 `Ridge regression` is one variant of the traditional regression model. 
 By adding a regularization term to the loss function, the model increase its generalization ability, thus more robust to over-fitting.
-From the statistics point of view, this transforms the original Maximum Likelihood Estimation(MLE) problem to the Maximum A Prior(MAP) problem, and the L2 regularization term is equivalent to the `Gaussian prior distribution`. 
+From the statistics point of view, this transforms the original Maximum Likelihood Estimation(MLE) problem to the Maximum A Posterior(MAP) problem, and the L2 regularization term is equivalent to the `Gaussian prior distribution`. 
 
 Another important variant of linear regression model, which is not implemented in this package yet, is `Lasso`.
 Lasso differs from ridge regression in the regularization term, by using L1 norm instead of L2, the model being learned is `sparse`.
@@ -136,6 +137,24 @@ Type `python regression.py` to train and test Ridge regression model on the `hou
 RMSE on the test set : `5.125107`
 
 `TODO`: Lasso/LARS, Elastic net
+
+##Gaussian Discriminant Analysis
+
+gda.py implements `Gaussian Discriminant Analysis`(GDA) model for binary classification.
+
+GDA is a generative model, it makes the following assumptions:
+
+1. p(y) is distributed according to a Bernoulli distribution.
+2. Both p(x|y=0) and p(x|y=1) is distributed to multivariate Gaussian distributions.
+
+Training a GDA model is simple, just do the Maximum Likelihood Estimation(MLE). 
+To make a prediction in the binary classification, compute s=p(x|y=1)p(y=1)-p(x|y=0)*p(y=0)
+When s>=0, predict y to be 1, otherwise, y is 0.
+
+Run `python gda.py` to train and test GDA model on `heart-scale` dataset
+
+Training accuracy : `85.253456%`
+Test accuracy : `88.679245%`
 
 ##Logistic Regression
 
@@ -199,9 +218,9 @@ Accuracy for AdaBoost : `86.792453%`
 
 ##Matrix Factorization
 
-recsys/mf.py implements `matrix factorization`(MF) algorithms for recommendation.
+mf.py implements `matrix factorization`(MF) algorithms for recommendation.
 
-Run `python recsys/mf.py` to train and test MF on the `1 million` version of `MovieLens` dataset.
+Run `python mf.py` to train and test MF on the `1 million` version of `MovieLens` dataset.
 
 RMSE on the test data is `0.932806` after `5 iterations`.
 
