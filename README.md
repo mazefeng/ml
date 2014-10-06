@@ -106,6 +106,39 @@ they are the foundations of Support Vector Machines and Neural Network,
 and the weighted version of `Pocket` will be used as the weak classifier of `AdaBoost`.
 
 
+##Linear Regression
+
+regression.py implements `Linear regression` model, in particular, `Ridge regression` for regression problem.
+
+`Ridge regression` is one variant of the traditional regression model. 
+By adding a regularization term to the loss function, the model increase its generalization ability, thus more robust to over-fitting.
+From the statistics point of view, this transforms the original Maximum Likelihood Estimation(MLE) problem to the Maximum A Prior(MAP) problem, and the L2 regularization term is equivalent to the `Gaussian prior distribution`. 
+
+Another important variant of linear regression model, which is not implemented in this package yet, is `Lasso`.
+Lasso differs from ridge regression in the regularization term, by using L1 norm instead of L2, the model being learned is `sparse`.
+This property is very important in large-scale regression problem, and can be used as a way of doing feature selection.
+But L1 norm is hard to optimized, so general optimization tools can't be used directly.
+The sub-gradient methods can be helpful.
+
+L1 norm is equivalent to the `Laplacian prior distribution`, 
+and there are models that consider L1 and L2 norm simultaneously: the Elastic net model. 
+For more details, please refer to Sam Roweis's lecture notes: http://www.cs.nyu.edu/~roweis/csc2515/
+
+For optimization, simple gradient descent algorithm works fairly well. 
+But for large-scale machine learning problems, the bottleneck lays in the computation of the loss function and gradient. 
+In this situation, efficient optimization algorithm is necessary for reducing the total amount of iterations.
+
+Here, the Conjugate Gradient methods is used in learning the regression model.
+All the advanced optimization technics will be mentioned in Optimization section.
+
+Type `python regression.py` to train and test Ridge regression model on the `housing prediction` problems.
+
+RMSE on the test set : `5.125107`
+
+`TODO`: Lasso/LARS, Elastic net
+
+##Logistic Regression
+
 ##Support Vector Machines
 
 svm.py implements `Sequential Minimization Optimization`(SMO) and `Primal estimated sub-gradient solver for SVMs`(pegasos) algorithms 
