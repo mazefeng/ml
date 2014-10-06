@@ -148,12 +148,15 @@ GDA is a generative model, it makes the following assumptions:
 2. Both p(x|y=0) and p(x|y=1) is distributed to multivariate Gaussian distributions.
 
 Training a GDA model is simple, just do the Maximum Likelihood Estimation(MLE). 
-To make a prediction in the binary classification, compute s=p(x|y=1)p(y=1)-p(x|y=0)*p(y=0)
-When s>=0, predict y to be 1, otherwise, y is 0.
+
+To make a prediction in the binary classification, 
+compute s=p(x|y=1)p(y=1)-p(x|y=0)*p(y=0), 
+when s>=0, predict y to be 1, otherwise, y is 0.
 
 Run `python gda.py` to train and test GDA model on `heart-scale` dataset
 
 Training accuracy : `85.253456%`
+
 Test accuracy : `88.679245%`
 
 ##Logistic Regression
