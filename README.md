@@ -19,12 +19,13 @@ The default implementation is extremely slow.
 4. Linear Regression
 5. Gaussian Discriminant Analysis
 6. Logistic Regression
-7. Support Vector Machines
-8. AdaBoost
-9. Matrix Factorization
-10. Neural Network
-11. Hidden Markov Models
-12. Optimization
+7. Softmax Regression
+8. Support Vector Machines
+9. AdaBoost
+10. Matrix Factorization
+11. Neural Network
+12. Hidden Markov Models
+13. Optimization
 
 ##Naive Bayes
 
@@ -145,7 +146,7 @@ gda.py implements `Gaussian Discriminant Analysis`(GDA) model for binary classif
 GDA is a generative model, it makes the following assumptions:
 
 1. p(y) is distributed according to a Bernoulli distribution.
-2. Both p(x|y=0) and p(x|y=1) is distributed to multivariate Gaussian distributions.
+2. Both p(x|y=0) and p(x|y=1) is distributed according to the multivariate Gaussian distributions.
 
 Training a GDA model is simple, just do the Maximum Likelihood Estimation(MLE). 
 
