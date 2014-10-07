@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import sys
-
+import numpy as np
 '''
     All regression/classification data are stored in the same format as LIBSVM.
 
@@ -10,6 +10,25 @@ import sys
 
     When loading dense data, feature id must be integer.
 '''
+
+
+def align_X(X0, X1):
+    m0, n0 = X0.shape
+    m1, n1 = X1.shape
+    if n0 > n1:
+        c = np.matrix(np.zeros([m1, n0 - n1]))
+        X1 = np.column_stack([X1, c])
+    elif n1 > n0:
+        c = np.matrix(np.zeros([m0, n1 - n0]))
+        X0 = np.column_stack([X0, c])
+    return X0, X1    
+
+def print_info():
+    try:
+        raise Exception
+    except:
+        f = sys.exc_info()[2].tb_frame.f_back
+    print >> sys.stderr, 'function =', f.f_code.co_name, ', line =', f.f_lineno
 
 def read_data(fp_data):
     return read_sparse_data(fp_data)
