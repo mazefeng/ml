@@ -1,4 +1,4 @@
-
+ML
 ==
 
 ##Introduction
@@ -28,6 +28,7 @@ The default implementation is extremely slow.
 13. Optimization
 
 Here are candidate models considered to be added into this package: 
+
 1. K-means clustering
 2. Gaussian Mixture Models
 3. Hierachical clustering
