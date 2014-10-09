@@ -1,4 +1,4 @@
-ml
+
 ==
 
 ##Introduction
@@ -26,6 +26,19 @@ The default implementation is extremely slow.
 11. Neural Network
 12. Hidden Markov Models
 13. Optimization
+
+Here are candidate models considered to be added into this package: 
+1. K-means clustering
+2. Gaussian Mixture Models
+3. Hierachical clustering
+4. Principle Component Analysis
+5. Kernel Principle Component Analysis
+6. Factor Analysis
+7. Independent Component Analysis
+8. Bagging
+9. Random Forest
+10. Classification and Regression Tree
+11. Gradient Boosting Machines
 
 ##Naive Bayes
 
@@ -85,7 +98,6 @@ IF (mac) THEN
         PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 156]
 </code></pre>
 
-
 ##Perceptron
 
 perceptron.py implements `Perceptron Learning Algorithm`(PLA) and its variant `Pocket` for binary classification.
@@ -106,7 +118,6 @@ and this is how the name `Pocket` come from.
 PLA and `Pocket` are very old-fashioned ml technics, but they are very important, 
 they are the foundations of Support Vector Machines and Neural Network, 
 and the weighted version of `Pocket` will be used as the weak classifier of `AdaBoost`.
-
 
 ##Linear Regression
 
@@ -162,6 +173,35 @@ Test accuracy : `88.679245%`
 
 ##Logistic Regression
 
+lr.py implements `Logistic Regression`(LR) model for binary classification.
+
+Unlike NB and GDA, LR belongs to another family of statistical model: the discriminant model, which tries to model p(y|x) directly.
+
+LR is a very widely-used classification model. It is simple, efficient, easy to train and interpretaion.
+
+Here the CG routine is used again to train the LR model. 
+
+Run `python lr.py` to train and test LR on `heart-scale` dataset.
+
+Training accuracy : 79.723502% (173/217)
+
+Test accuracy : 90.566038% (48/53)
+
+##Softmax Regression
+
+When dealing with a multi-classification problem, we can either adopt the `one-against-all` idea 
+by transforming the multi-classification problem into a set of binary classification problem, 
+or just training the `Softmax Regression` model.
+
+Softmax Regression model is naturely born for the multi-classification problem, 
+and can be viewed as an extension of the LR model. 
+Training the Softmax model is much the same as LR.
+
+Run `python softmax.py` to train and test LR on the `mnist` hand-written digit recognization dataset.
+
+ 
+
+
 ##Support Vector Machines
 
 svm.py implements `Sequential Minimization Optimization`(SMO) and `Primal estimated sub-gradient solver for SVMs`(pegasos) algorithms 
@@ -183,7 +223,7 @@ This SMO implementation simplify the original one in the following 3 ways:
 While pegasos is an gradient-based algorithm, it runs very fast, and can be easily parallelized. 
 Pegasos works in primal space, so only linear kernel is available. 
 
-Run `python svm.py` to train and test SVMs on `heart-scale` dataset
+Run `python svm.py` to train and test SVMs on `heart-scale` dataset.
 
 For `Pegasos`, 
 
@@ -231,6 +271,8 @@ RMSE on the test data is `0.932806` after `5 iterations`.
 MF is optimized by `Stochastic Gradient Descent`(SGD) algorithm in mini-batch manner. 
 By combining `NumPy` with mini-batch, the training algorithm is very efficient with an affordable memory cost.
 
+##Neural Network
+
 ##Hidden Markov Model
 
 hmm.py implements `Hidden Markov Models`(HMMs) for solving `sequence labeling` problem.
@@ -255,6 +297,3 @@ It is the right-wing guerrillas who are aligned with the drug traffickers , not 
 </code></pre>
 
 `TODO`: Parallel HMMs training, `Max Entropy Markov Models`(MEMM), `Conditional Random Field`(CRF)
-
-
-
