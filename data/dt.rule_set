@@ -1,0 +1,115 @@
+IF (mac) THEN 
+  IF (ide) THEN 
+    PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 8]
+  ELSE 
+    IF (controller) THEN 
+      PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 5]
+    ELSE 
+      IF (difference) THEN 
+        IF (people) THEN 
+          PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
+        ELSE 
+          PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 13]
+      ELSE 
+        PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 156]
+ELSE 
+  IF (apple) THEN 
+    IF (hook) THEN 
+      PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
+    ELSE 
+      IF (connecting) THEN 
+        PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 1]
+      ELSE 
+        PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 68]
+  ELSE 
+    IF (quadra) THEN 
+      PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 29]
+    ELSE 
+      IF (centri) THEN 
+        PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 18]
+      ELSE 
+        IF (powerbook) THEN 
+          PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 15]
+        ELSE 
+          IF (ide) THEN 
+            PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 56]
+          ELSE 
+            IF (iisus) THEN 
+              PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 11]
+            ELSE 
+              IF (motherboard) THEN 
+                IF (experimenting) THEN 
+                  PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 1]
+                ELSE 
+                  PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 48]
+              ELSE 
+                IF (lciius) THEN 
+                  PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 9]
+                ELSE 
+                  IF (simm) THEN 
+                    IF (window) THEN 
+                      PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 3]
+                    ELSE 
+                      IF (ave) THEN 
+                        PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
+                      ELSE 
+                        IF (require) THEN 
+                          PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
+                        ELSE 
+                          IF (faq) THEN 
+                            PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 1]
+                          ELSE 
+                            PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 19]
+                  ELSE 
+                    IF (card) THEN 
+                      IF (nice) THEN 
+                        PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 3]
+                      ELSE 
+                        IF (iicus) THEN 
+                          PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 2]
+                        ELSE 
+                          IF (credit) THEN 
+                            PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 2]
+                          ELSE 
+                            IF (wondering) THEN 
+                              PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 9]
+                            ELSE 
+                              IF (cheapest) THEN 
+                                PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 1]
+                              ELSE 
+                                IF (madsen) THEN 
+                                  PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 1]
+                                ELSE 
+                                  PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 89]
+                    ELSE 
+                      IF (gateway) THEN 
+                        PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 20]
+                      ELSE 
+                        IF (optical) THEN 
+                          PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 9]
+                        ELSE 
+                          IF (ago) THEN 
+                            PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 10]
+                          ELSE 
+                            IF (macintosh) THEN 
+                              PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 4]
+                            ELSE 
+                              IF (switch) THEN 
+                                PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 14]
+                              ELSE 
+                                IF (external) THEN 
+                                  IF (fax) THEN 
+                                    PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 2]
+                                  ELSE 
+                                    PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 9]
+                                ELSE 
+                                  IF (assume) THEN 
+                                    PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 6]
+                                  ELSE 
+                                    IF (basically) THEN 
+                                      PREDICT LABEL IS comp.sys.mac.hardware.e [branch-size : 6]
+                                    ELSE 
+                                      IF (controller) THEN 
+                                        PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 16]
+                                      ELSE 
+                                        PREDICT LABEL IS comp.sys.ibm.pc.hardware.d [branch-size : 270]

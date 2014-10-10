@@ -6,7 +6,6 @@ import numpy as np
 from math import log
 
 from common import read_dense_data
-from common import map_label
 
 random.seed(1024 * 1024)
 
@@ -103,12 +102,12 @@ if __name__ == '__main__':
     X_test, Y_test = read_dense_data(open(test_path))
 
     X_train = np.matrix(X_train)
-    Y_train = np.matrix(map_label(Y_train)).T
-    Y_train[np.where(Y_train == 0)] = -1
+    Y_train = [int(y) for y in Y_train]
+    Y_train = np.matrix(Y_train).T
  
     X_test = np.matrix(X_test)
-    Y_test = np.matrix(map_label(Y_test)).T
-    Y_test[np.where(Y_test == 0)] = -1    
+    Y_test = [int(y) for y in Y_test]
+    Y_test = np.matrix(Y_test).T
 
     clf = AdaBoost()
     clf.train(X_train, Y_train)
