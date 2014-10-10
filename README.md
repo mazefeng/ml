@@ -28,6 +28,14 @@ The default implementation is extremely slow.
 13. Deep Neural Network
 14. Optimization
 
+The following models and algorithms will be added into this package soon:
+
+1. Sparse AutoEncoder
+2. Deep Neural Network
+3. L-BFGS
+4. OWL-QN
+5. Other unsupervised learning algorithms
+
 ##Naive Bayes
 
 nb.py implements `Naive Bayes`(NB) classifier for both `Multi-variate Bernoulli` and `Multinomial` event model.
@@ -291,6 +299,10 @@ It is the right-wing guerrillas who are aligned with the drug traffickers , not 
 
 # Optimization
 
-
+## Stochastic Gradient Descent(SGD)
 
 For many ML models, 
+
+## Conjugate Gradient method(CG)
+
+
