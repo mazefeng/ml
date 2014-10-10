@@ -297,12 +297,12 @@ It is the right-wing guerrillas who are aligned with the drug traffickers , not 
 
 `TODO`: Parallel HMMs training, `Max Entropy Markov Models`(MEMM), `Conditional Random Field`(CRF)
 
-# Optimization
+## Optimization
 
-## Stochastic Gradient Descent(SGD)
+### Stochastic Gradient Descent(SGD)
 
 For many ML models, 
 
-## Conjugate Gradient method(CG)
+### Conjugate Gradient method(CG)
 
 
