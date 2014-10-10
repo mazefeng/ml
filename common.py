@@ -11,8 +11,14 @@ import numpy as np
     When loading dense data, feature id must be integer.
 '''
 
+# sigmoid
+sigmoid = lambda x : 1.0 / (1.0 + np.exp(-x))
 
-def align_X(X0, X1):
+def align(X0, X1):
+    '''
+    align X0 and X1 by column
+    '''
+
     m0, n0 = X0.shape
     m1, n1 = X1.shape
     if n0 > n1:
@@ -23,7 +29,11 @@ def align_X(X0, X1):
         X0 = np.column_stack([X0, c])
     return X0, X1    
 
-def print_info():
+
+def trace():
+    '''
+    print the function and line number that throws an exception
+    '''
     try:
         raise Exception
     except:
