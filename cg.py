@@ -7,7 +7,10 @@ import numpy as np
 
 from common import trace
 
-def CG(f, w, max_fc = 95, **argc):
+# TODO
+# 1. Early stop criteria, use fval to determine
+
+def CG(f, w, max_fc, **argc):
     '''
     conjugate gradient routine for optimization
     '''
@@ -27,6 +30,7 @@ def CG(f, w, max_fc = 95, **argc):
     I = J = 1
     LS_failed = False
     f0, df0 = f(w, **argc)
+    fval = [f0]
     print >> sys.stderr, 'Iter = %4.4i    Cost = %lf' % (I, f0)
 
     s = -df0
@@ -44,6 +48,7 @@ def CG(f, w, max_fc = 95, **argc):
                     M -= 1
                     I += 1
                     f3, df3 = f(w + w3 * s, **argc)
+                    fval.append(f3)
                     print >> sys.stderr, 'Iter = %4.4i    Cost = %lf' % (I, f3)
                     if isnan(f3) or isinf(f3) or np.any(np.isnan(df3) + np.isinf(df3)):
                         raise NameError, ('error')
@@ -97,6 +102,7 @@ def CG(f, w, max_fc = 95, **argc):
                 w3 = (w2 + w4) / 2
             w3 = max(min(w3, w4 - INT * (w4 - w2)), w2 + INT * (w4 - w2))
             f3, df3 = f(w + w3 * s, **argc)
+            fval.append(f3)
             if f3 < F0:
                 w0, F0, dF0 = w + w3 * s, f3, df3
             M -= 1
@@ -123,6 +129,8 @@ def CG(f, w, max_fc = 95, **argc):
             w3 = 1.0 / (1.0 - d0)
             LS_failed = True
     print >> sys.stderr, ''
+    # print >> sys.stderr, fval
+    # print >> sys.stderr, ''
     return w
 
 def f(x):
@@ -131,5 +139,5 @@ def f(x):
 if __name__ == '__main__':
 
     x = 100.0 * np.matrix(np.ones([1, 1]))
-    x_opt = CG(f, x)
+    x_opt = CG(f, x, 40)
     print x_opt
