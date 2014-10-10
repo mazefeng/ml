@@ -142,7 +142,7 @@ class MF:
                 sqr_err.append(float(err.T * err) / self.batch_size)
 
             rmse = math.sqrt(np.mean(np.matrix(sqr_err)))
-            sys.stderr.write('Iter: %d\t\t\tRMSE: %f\n' % (i, rmse))
+            sys.stderr.write('Iter: %4.4i    RMSE: %f\n' % (i + 1, rmse))
 
             if i > 0 and i % 10 ==0: self.dump_model('model_%d' % (i))
             
@@ -175,7 +175,7 @@ class MF:
             sqr_err.append(float(err.T * err) / self.batch_size)
         
         rmse = math.sqrt(np.mean(np.matrix(sqr_err)))
-        sys.stderr.write('RMSE: %f\n' % (rmse))
+        # sys.stderr.write('RMSE: %f\n' % (rmse))
         
         return rmse
     
@@ -230,11 +230,13 @@ def read_sparse_matrix(fp_data, rows = None, cols = None):
  
 if __name__ == '__main__':
  
-    train_data = 'data/ml-1m/ratings.dat.train'
-    test_data = 'data/ml-1m/ratings.dat.test'
+    train_data = 'data/movielens.1m.train'
+    test_data = 'data/movielens.1m.test'
 
     train_ratings = read_sparse_matrix(open(train_data))
+    print >> sys.stderr, 'read training sparse matrix done.'
     test_ratings = read_sparse_matrix(open(test_data), train_ratings.rows, train_ratings.cols)
+    print >> sys.stderr, 'read test sparse matrix done.'
 
     # pickle.dump(train_ratings, open('train_ratings.pkl', 'w'))
     # pickle.dump(test_ratings, open('test_ratings.pkl', 'w'))
@@ -242,5 +244,11 @@ if __name__ == '__main__':
 
     mf = MF()
     mf.train(train_ratings)
-    mf.test(test_ratings)
+
+    rmse_train = mf.test(train_ratings)
+    rmse_test = mf.test(test_ratings)
     
+    print >> sys.stderr, 'Training RMSE for MovieLens 1m dataset: %lf' % rmse_train
+    print >> sys.stderr, 'Test RMSE for MovieLens 1m dataset: %lf' % rmse_test
+
+
