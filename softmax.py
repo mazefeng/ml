@@ -6,21 +6,14 @@ import math
 import random
 
 from common import read_dense_data
-from common import align_X
+from common import sigmoid
+from common import align
+
 
 random.seed(1024 * 1024)
 
 from cg import CG
-from gd import GD
-
-def unroll(x):
-    if type(x) == np.matrix:
-        theta = x.reshape(-1, 1)
-    else:
-        theta = x[0].reshape(-1, 1)
-        for i in range(1, len(x)):
-            theta = np.append(theta, x[i].reshape(-1, 1), 0)
-    return theta
+# from gd import GD
 
 class SoftmaxRegression:
 
@@ -30,41 +23,46 @@ class SoftmaxRegression:
 
     def train(self, X, Y, lamb = 1.0):
 
-        L = len(set([v[0] for v in Y.tolist()]))
+        O = len(set([v[0] for v in Y.tolist()]))
         m, n = X.shape
  
-        w_init = np.matrix(0.005 * np.random.random([L, n]))  
-        theta_init = unroll(w_init)
+        w = np.matrix(0.005 * np.random.random([O, n])).reshape(-1, 1)
 
-        theta = CG(self.cost, theta_init, X = X, Y = Y, lamb = lamb, L = L)
+        w_opt = CG(self.cost, w, X = X, Y = Y, lamb = lamb, O = O)
 
-        self.w = theta.reshape(L, n)
+        self.w = w_opt.reshape(O, n)
 
         print 'c = ', self.c
     
-    def cost(self, theta, X, Y, lamb, L):
+    def cost(self, w, X, Y, lamb, O):
 
         m, n = X.shape
 
-        w = theta.reshape(L, n) 
-        Y_encode = np.matrix(np.zeros((L, m)))
-        Y_encode[(Y.T, np.matrix(range(m)))] = 1
+        w = w.reshape(O, n)
+ 
+        I = Y.T
+        Y = np.matrix(np.zeros((O, m)))
+        Y[(I, np.matrix(range(m)))] = 1
         
-        likelihood = np.exp(w * X.T)
-        likelihood = likelihood / np.sum(likelihood, 0)
+        P = np.exp(w * X.T)
+        P = P / P.sum(0)
         
-        cost = - (1.0 / m) * np.sum( np.multiply(Y_encode, np.log(likelihood)) ) + (lamb / 2.0) * np.sum(np.square(theta))
-        grad = - (1.0 / m) * (Y_encode - likelihood) * X + lamb * w
-        grad = unroll(grad)
-        
+        L = - (1.0 / m) * np.multiply(Y, np.log(P)).sum()
+        R = (lamb / 2.0) * np.square(w).sum()
+      
+        J = L + R
+       
+        grad = - (1.0 / m) * (Y - P) * X + lamb * w
+        grad = grad.reshape(-1, 1)       
+ 
         self.c += 1
 
-        return cost, grad
+        return J, grad
             
     def predict(self, X):
-        likelihood = np.exp(self.w * X.T)
-        likelihood = likelihood / np.sum(likelihood, 0)
-        return np.argmax(likelihood, 0).T
+        P = np.exp(self.w * X.T)
+        P = P / P.sum(0)
+        return np.argmax(P, 0).T
 
     def test(self, X, Y):
 
@@ -82,30 +80,36 @@ if __name__ == '__main__':
     train_path = 'data/mnist.train'
     test_path = 'data/mnist.test'
 
-    X_train, Y_train = read_dense_data(open(train_path))
-     
+    X_train, Y_train = read_dense_data(open(train_path)) 
     print >> sys.stderr, 'read training data done.'
-
-    X_test, Y_test = read_dense_data(open(test_path))
-
-    print >> sys.stderr, 'read test data done'
-
     X_train = np.matrix(X_train)
     Y_train = [int(y) for y in Y_train]
     Y_train = np.matrix(Y_train).T
-
     print >> sys.stderr, 'create training matrix done.'
- 
+
+    X_test, Y_test = read_dense_data(open(test_path))
+    print >> sys.stderr, 'read test data done'
     X_test = np.matrix(X_test)
     Y_test = [int(y) for y in Y_test]    
     Y_test = np.matrix(Y_test).T
- 
     print >> sys.stderr, 'create test matrix done.'
 
-    X_train, X_test = align_X(X_train, X_test)
+    X_train, X_test = align(X_train, X_test)
+
+    '''
+    X_all = np.row_stack([X_train, X_test])
+    print X_all.shape
+    mean = X_all.mean(0)
+    std = X_all.std(0)
+    del X_all
+    
+    X_train = 1.0 * (X_train - mean) / (std + 0.0001)
+    X_test = 1.0 * (X_test - mean) / (std + 0.0001)
+    '''
 
     clf = SoftmaxRegression()
     clf.train(X_train, Y_train) 
+    # clf.train(X_test, Y_test) 
     acc_train = clf.test(X_train, Y_train)
     acc_test = clf.test(X_test, Y_test)
 
