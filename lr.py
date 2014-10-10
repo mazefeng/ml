@@ -13,9 +13,6 @@ from cg import CG
 from gd import SGDOption
 from gd import SGD
 
-def sigmoid(z):
-    return 1.0 / (1.0 + np.exp(-z))
-
 class LogisticRegression:
 
     def __init__(self):        
@@ -29,13 +26,18 @@ class LogisticRegression:
         x0 = np.matrix(np.ones([m, 1]))
         X = np.column_stack([X, x0])
 
-        w_init = np.matrix(np.zeros([n + 1, 1]))
+        w = np.matrix(np.zeros([n + 1, 1]))
 
-        # self.w = GD(w_init, self.cost)
-        # self.w = CG(self.cost, w_init, X = X, Y = Y, lamb = lamb)
-        opt = SGDOption()
-        self.w = SGD(self.cost, w_init, X, Y, opt, lamb = lamb)
+        self.w = CG(self.cost, w, 100, X = X, Y = Y, lamb = lamb)
         
+        '''
+        opt = SGDOption()
+        opt.max_iter = 100
+        opt.mini_batch_size = 100
+
+        self.w = SGD(self.cost, w, X, Y, opt, lamb = lamb)
+        '''        
+
         print 'Done with function evalution C = %d' % self.c
 
     def test(self, X, Y):
@@ -49,7 +51,7 @@ class LogisticRegression:
         P = np.matrix(np.zeros(Y.shape))
         P[np.where(Y == Y_pred)] = 1
 
-        print >> sys.stderr, 'Accuracy : %lf%% (%d/%d)' % (100.0 * P.sum() / len(Y), P.sum(), len(Y))
+        # print >> sys.stderr, 'Accuracy : %lf%% (%d/%d)' % (100.0 * P.sum() / len(Y), P.sum(), len(Y))
 
         return 1.0 * P.sum() / len(Y) 
 
@@ -88,11 +90,9 @@ if __name__ == '__main__':
  
     clf = LogisticRegression()
     clf.train(X_train, Y_train) 
-    acc_lr = clf.test(X_train, Y_train)
-    print acc_lr
-    acc_lr = clf.test(X_test, Y_test)
+    acc_train = clf.test(X_train, Y_train)
+    acc_test = clf.test(X_test, Y_test)
 
-    print acc_lr
-
-    print >> sys.stderr, 'Accuracy for Logistic Regression : %lf%%' % (100.0 * acc_lr)
+    print >> sys.stderr, 'Training accuracy for Logistic Regression : %lf%%' % (100.0 * acc_train)
+    print >> sys.stderr, 'Test accuracy for Logistic Regression : %lf%%' % (100.0 * acc_test)
 
