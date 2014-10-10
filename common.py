@@ -18,7 +18,6 @@ def align(X0, X1):
     '''
     align X0 and X1 by column
     '''
-
     m0, n0 = X0.shape
     m1, n1 = X1.shape
     if n0 > n1:
@@ -40,8 +39,6 @@ def trace():
         f = sys.exc_info()[2].tb_frame.f_back
     print >> sys.stderr, 'function =', f.f_code.co_name, ', line =', f.f_lineno
 
-def read_data(fp_data):
-    return read_sparse_data(fp_data)
 
 def read_dense_data(fp_data):
     X, Y = list(), list()
@@ -83,24 +80,21 @@ def read_sparse_data(fp_data):
 def read_sequence_data(fp_data):
     X, S = list(), list()
 
-    L = list()
-    I = list()
+    for line in fp_data:
+        x_list = list()
+        s_list = list()
+        
+        for kv in line.strip().split():
+            k,v = kv.split('/')
+            x_list.append(k)
+            s_list.append(v)
 
-    for c, line in enumerate(fp_data):
-        x, s = line.strip().split('/')
-        L.append([x, s])
-        if x == '###':
-            I.append(c)
-
-    for t in range(len(I) - 1):
-        x_list = [x for x, s in L[I[t] + 1 : I[t + 1]]]
-        s_list = [s for x, s in L[I[t] + 1 : I[t + 1]]]
         X.append(x_list)
         S.append(s_list)
 
     return X, S
 
-def plot_sequence_data(x, s, line_width = 128):
+def plot_sequence_data(x, s, w = 128):
 
     x_out = list()
     t_out = list()
@@ -108,27 +102,27 @@ def plot_sequence_data(x, s, line_width = 128):
 
     for p, q in zip(x, s):
 
-        l = max(len(p), len(q))
+        L = max(len(p), len(q))
         
-        d = l - len(q)
+        d = L - len(q)
         m = d / 2
         n = d - m
-        x_out.append(p + ' ' * (l - len(p)))
+        x_out.append(p + ' ' * (L - len(p)))
         s_out.append('-' * m + q + '-' * n)
 
-        m = (l - 1) / 2
-        n = l - 1 - m
+        m = (L - 1) / 2
+        n = L - 1 - m
         t_out.append(' ' * m + '|' + ' ' * n)
     
     s_line = '-'.join(s_out)
     t_line = ' '.join(t_out)
     x_line = ' '.join(x_out)
 
-    if len(s_line) > line_width:
-        for i in range(len(s_line) / line_width + 1):
-            print >> sys.stderr, s_line[i * line_width : (i + 1) * line_width]
-            print >> sys.stderr, t_line[i * line_width : (i + 1) * line_width]
-            print >> sys.stderr, x_line[i * line_width : (i + 1) * line_width]
+    if len(s_line) > w:
+        for I in range(len(s_line) / w + 1):
+            print >> sys.stderr, s_line[I * w : (I + 1) * w]
+            print >> sys.stderr, t_line[I * w : (I + 1) * w]
+            print >> sys.stderr, x_line[I * w : (I + 1) * w]
     else:
         print >> sys.stderr, s_line
         print >> sys.stderr, t_line
@@ -145,6 +139,9 @@ def map_label(Y):
 
 if __name__ == '__main__':
 
-    X, S = read_sequence_data(open('data/pos-tagging/entrain'))
-    plot_sequence_data(X[1], S[1])
+    from random import randint
+    X, S = read_sequence_data(open('data/pos_tagging.train'))
+
+    i = randint(0, len(X) - 1)
+    plot_sequence_data(X[i], S[i])
 
