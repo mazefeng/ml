@@ -28,6 +28,7 @@ class HiddenMarkovModel:
         bigram  = dict(int)
         trigram = dict(int)
 
+        # maximum likelihood estimate
         for x_list, s_list in zip(X, S):
             if len(x_list) == 0 or len(x_list) != len(s_list):
                 print >> sys.stderr, 'ERROR: x_list =', x_list, ', s_list =', s_list
@@ -77,6 +78,7 @@ class HiddenMarkovModel:
                 trigram[(s_i, s_j, 'STOP')] += smooth
                 bigram[(s_i, s_j)] += smooth
 
+        # normalize
         for s_i in self.D:
             for s_j in self.D:
                 for s_k in self.D:
@@ -163,7 +165,7 @@ class HiddenMarkovModel:
             # print >> sys.stderr, 'Tagging result:'
             # plot_sequence_data(x_list, s_list_pred)            
 
-        print >> sys.stderr, 'Baseline accuracy : %lf%% (%d/%d)' % (100.0 * m / n, m, n)
+        # print >> sys.stderr, 'Baseline accuracy : %lf%% (%d/%d)' % (100.0 * m / n, m, n)
 
         return 1.0 * m / n
 
@@ -187,15 +189,15 @@ class HiddenMarkovModel:
             # print >> sys.stderr, 'Tagging result:'
             # plot_sequence_data(x_list, s_list_pred)            
         
-        print >> sys.stderr, 'Accuracy for HMM POS-tagger : %lf%% (%d/%d)' % (100.0 * m / n, m, n)
+        # print >> sys.stderr, 'Accuracy for HMM POS-tagger : %lf%% (%d/%d)' % (100.0 * m / n, m, n)
 
         return 1.0 * m / n
 
 
 if __name__ == '__main__':
 
-    train_path = 'data/pos-tagging/entrain'
-    test_path = 'data/pos-tagging/entest'
+    train_path = 'data/pos_tagging.train'
+    test_path = 'data/pos_tagging.test'
     
     # train_path = 'data/pos-tagging/ictrain'
     # test_path = 'data/pos-tagging/ictest'
@@ -209,5 +211,5 @@ if __name__ == '__main__':
     baseline_acc = tagger.baseline(X_test, S_test)
     viterbi_acc = tagger.test(X_test, S_test)
 
-    # print >> sys.stderr, 'Baseline accuracy %lf%%' % (100.0 * baseline_acc)
-    # print >> sys.stderr, 'Accuracy for HMM POS-tagger %lf%%' % (100.0 * viterbi_acc)
+    print >> sys.stderr, 'Baseline accuracy %lf%%' % (100.0 * baseline_acc)
+    print >> sys.stderr, 'Accuracy for HMM POS-tagger %lf%%' % (100.0 * viterbi_acc)
