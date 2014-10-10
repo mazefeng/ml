@@ -72,8 +72,10 @@ if __name__ == '__main__':
  
     clf = GaussianDiscriminantAnalysis()
     clf.train(X_train, Y_train)
+    
     acc_train = clf.test(X_train, Y_train)
-    print >> sys.stderr, 'Training accuracy for Gaussian Discriminant Analysis : %lf%%' % (100.0 * acc_train)
     acc_test = clf.test(X_test, Y_test)
+   
+    print >> sys.stderr, 'Training accuracy for Gaussian Discriminant Analysis : %lf%%' % (100.0 * acc_train)
     print >> sys.stderr, 'Test accuracy for Gaussian Discriminant Analysis : %lf%%' % (100.0 * acc_test)
 
