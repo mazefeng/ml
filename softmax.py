@@ -13,7 +13,8 @@ from common import align
 random.seed(1024 * 1024)
 
 from cg import CG
-# from gd import GD
+from gd import SGDOption
+from gd import SGD
 
 class SoftmaxRegression:
 
@@ -28,7 +29,9 @@ class SoftmaxRegression:
  
         w = np.matrix(0.005 * np.random.random([O, n])).reshape(-1, 1)
 
-        w_opt = CG(self.cost, w, X = X, Y = Y, lamb = lamb, O = O)
+        opt = SGDOption()
+        # w_opt = CG(self.cost, w, X = X, Y = Y, lamb = lamb, O = O)
+        w_opt = SGD(self.cost, w, X, Y, opt, lamb = lamb, O = O)
 
         self.w = w_opt.reshape(O, n)
 
