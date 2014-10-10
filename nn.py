@@ -11,8 +11,9 @@ from common import sigmoid
 
 random.seed(1024 * 1024)
 
-
 from cg import CG
+from gd import SGDOption
+from gd import SGD
 
 def normalize(X0, X1):
     X_all = np.row_stack([X0, X1])
