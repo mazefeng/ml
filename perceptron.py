@@ -74,20 +74,28 @@ if __name__ == '__main__':
     X_test, Y_test = read_dense_data(open(test_path))
 
     X_train = np.matrix(X_train)
-    Y_train = np.matrix(map_label(Y_train)).T
-    Y_train[np.where(Y_train == 0)] = -1
+    Y_train = [int(y) for y in Y_train]
+    Y_train = np.matrix(Y_train).T
  
     X_test = np.matrix(X_test)
-    Y_test = np.matrix(map_label(Y_test)).T
-    Y_test[np.where(Y_test == 0)] = -1    
+    Y_test = [int(y) for y in Y_test]
+    Y_test = np.matrix(Y_test).T
 
     clf = Perceptron()
     clf.train(X_train, Y_train)
-    perceptron_acc = clf.test(X_test, Y_test)
-    print >> sys.stderr, 'Accuracy for Perceptron : %lf%%' % (100 *  perceptron_acc)
+
+    acc_train = clf.test(X_train, Y_train)
+    acc_test = clf.test(X_test, Y_test)
+
+    print >> sys.stderr, 'Training accuracy for Perceptron : %lf%%' % (100 *  acc_train)
+    print >> sys.stderr, 'Test accuracy for Perceptron : %lf%%' % (100 *  acc_test)
 
     clf = Pocket()
     clf.train(X_train, Y_train)
-    pocket_acc = clf.test(X_test, Y_test)
-    print >> sys.stderr, 'Accuracy for Pocket : %lf%%' % (100 *  pocket_acc)
+    
+    acc_train = clf.test(X_train, Y_train)
+    acc_test = clf.test(X_test, Y_test)
+    
+    print >> sys.stderr, 'Training accuracy for Pocket : %lf%%' % (100 *  acc_train)
+    print >> sys.stderr, 'Test accuracy for Pocket : %lf%%' % (100 *  acc_test)
  
