@@ -4,7 +4,8 @@ import sys
 import json
 from math import log
 from collections import defaultdict
-from common import read_data
+
+from common import read_sparse_data
 
 def entropy(p, q):
     if p == 0 or q == 0:
@@ -192,14 +193,16 @@ if __name__ == '__main__':
     train_path = 'data/2_newsgroups.train'
     test_path = 'data/2_newsgroups.test'
 
-    X_train, Y_train = read_data(open(train_path))
-    X_test, Y_test = read_data(open(test_path))
+    X_train, Y_train = read_sparse_data(open(train_path))
+    X_test, Y_test = read_sparse_data(open(test_path))
 
     clf = ID3()
     clf.train(X_train, Y_train)
-    accuracy = clf.test(X_test, Y_test)
+    acc_train = clf.test(X_train, Y_train)
+    acc_test = clf.test(X_test, Y_test)
 
-    print >> sys.stderr, 'Accuracy for ID3 : %f%%' % (100 * accuracy)
+    print >> sys.stderr, 'Training accuracy for ID3 : %f%%' % (100 * acc_train)
+    print >> sys.stderr, 'Test accuracy for ID3 : %f%%' % (100 * acc_test)
    
     clf.dump_model(open('data/dt.model', 'w'), open('data/dt.rule_set', 'w'))
  
