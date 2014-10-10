@@ -191,7 +191,7 @@ Test accuracy : 90.566038% (48/53)
 ##Softmax Regression
 
 When dealing with a multi-classification problem, we can either adopt the `one-against-all` idea 
-by transforming the multi-classification problem into a set of binary classification problem, 
+by transforming it into a set of binary classification problem, 
 or just training the `Softmax Regression` model.
 
 Softmax Regression model is naturely born for the multi-classification problem, 
@@ -201,8 +201,6 @@ Training the Softmax model is much the same as LR.
 Run `python softmax.py` to train and test LR on the `mnist` hand-written digit recognization dataset.
 
  
-
-
 ##Support Vector Machines
 
 svm.py implements `Sequential Minimization Optimization`(SMO) and `Primal estimated sub-gradient solver for SVMs`(pegasos) algorithms 
