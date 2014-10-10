@@ -2,7 +2,8 @@
 
 import sys
 from math import log
-from common import read_data
+
+from common import read_sparse_data
 
 '''
 Event model:
@@ -105,14 +106,21 @@ if __name__ == '__main__':
     train_path = 'data/20_newsgroups.train'
     test_path = 'data/20_newsgroups.test'
 
-    X_train, Y_train = read_data(open(train_path))
-    X_test, Y_test = read_data(open(test_path))
+    X_train, Y_train = read_sparse_data(open(train_path))
+    X_test, Y_test = read_sparse_data(open(test_path))
 
     clf = NaiveBayes()
     clf.train(X_train, Y_train, Bernoulli)
-    print >> sys.stderr, 'Accuracy for Multi-variate Bernoulli event model : %f%%' % (100 * clf.test(X_test, Y_test))
+    acc_train = clf.test(X_train, Y_train)
+    acc_test = clf.test(X_test, Y_test)
+
+    print >> sys.stderr, 'Training accuracy for Multi-variate Bernoulli event model : %f%%' % (100 * acc_train)
+    print >> sys.stderr, 'Test accuracy for Multi-variate Bernoulli event model : %f%%' % (100 * acc_test)
 
     clf.train(X_train, Y_train, Multinomial)
-    print >> sys.stderr, 'Accuracy for Multinomial event model : %f%%' % (100 * clf.test(X_test, Y_test))
+    acc_train = clf.test(X_train, Y_train)
+    acc_test = clf.test(X_test, Y_test)
 
+    print >> sys.stderr, 'Training accuracy for Multinomial event model : %f%%' % (100 * acc_train)
+    print >> sys.stderr, 'Test accuracy for Multinomial event model : %f%%' % (100 * acc_test)
 
