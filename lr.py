@@ -5,12 +5,11 @@ import random
 import numpy as np
 from math import sqrt
 from common import read_dense_data
-from common import map_label
+from common import sigmoid
 
 random.seed(1024 * 1024)
 
 from cg import CG
-from gd import GD
 
 def sigmoid(z):
     return 1.0 / (1.0 + np.exp(-z))
