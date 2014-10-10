@@ -9,7 +9,9 @@ from common import read_dense_data
 random.seed(1024 * 1024)
 
 from cg import CG
-from gd import GD
+from gd import SGDOption
+from gd import SGD
+
 
 class LinearRegression:
 
@@ -30,8 +32,9 @@ class LinearRegression:
 
         w_init = np.matrix(np.zeros([n + 1, 1]))
 
-        # self.w = GD(w_init, self.cost)
-        self.w = CG(self.cost, w_init, X = X, Y = Y, lamb = lamb)
+        opt = SGDOption()
+        self.w = SGD(self.cost, w_init, X, Y, opt, lamb = lamb)
+        # self.w = CG(self.cost, w_init, 200, X = X, Y = Y, lamb = lamb)
         
         print 'Done with function evalution C = %d' % self.c
 
@@ -79,6 +82,7 @@ if __name__ == '__main__':
     
     reg = LinearRegression()
     reg.train(X_train, Y_train) 
+    reg.test(X_train, Y_train) 
     reg.test(X_test, Y_test)
 
 
