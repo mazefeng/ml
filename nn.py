@@ -43,6 +43,16 @@ class NeuralNetwork:
 
         w = np.row_stack([w1.reshape(-1, 1), w2.reshape(-1, 1)])
         
+        '''
+        opt = SGDOption()
+        opt.max_iter = 10
+        opt.mini_batch_size = 500
+        opt.eps = 1e-8
+        opt.alpha_decay = lambda x : 0.4 / math.sqrt(x)
+        
+        w_opt = SGD(self.cost, w, X, Y, opt, lamb = lamb, I = I, H = H, O = O)
+        '''
+
         w_opt = CG(self.cost, w, 90, X = X, Y = Y, lamb = lamb, I = I, H = H, O = O)
 
         self.w1 = w_opt[0 : H * (I + 1)].reshape(H, I + 1)
@@ -127,9 +137,9 @@ class NeuralNetwork:
 
 if __name__ == '__main__':
     
-    # train_path = 'data/mini-mnist'
+    # train_path = 'data/mini_mnist'
     train_path = 'data/mnist.train'
-    # test_path = 'data/mini-mnist'
+    # test_path = 'data/mini_mnist'
     test_path = 'data/mnist.test'
 
     X_train, Y_train = read_dense_data(open(train_path))
