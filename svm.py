@@ -25,7 +25,7 @@ L = lambda Xi, Xj: Xi * Xj.T
 
 linear_kernel = L
 
-def rbf_kernel(X_i, X_j, sigma = 2.0):
+def rbf_kernel(X_i, X_j, sigma = 0.1):
     pairwise_dists = cdist(X_i, X_j, 'euclidean')
     K = np.exp(-(pairwise_dists ** 2) / (2 * sigma * sigma))
     return np.matrix(K)
@@ -226,7 +226,6 @@ def plot_hyperplane(X, Y, model, K, plot_id, d = 500):
 if __name__ == '__main__':
 
     # set rbf_kernel.gamma = 0.1
-    '''
     X_1, Y_1 = read_dense_data(open('data/sample_data_1.txt'))
     X_2, Y_2 = read_dense_data(open('data/sample_data_2.txt'))
     X_3, Y_3 = read_dense_data(open('data/sample_data_3.txt'))
@@ -252,8 +251,8 @@ if __name__ == '__main__':
     plot_hyperplane(X_3, Y_3, SMO, rbf_kernel, 236)
     # plt.savefig('svm.png') 
     plt.show()
-    '''
 
+    # set rbf_kernel.gamma = 2.0
     # heart_scale dataset
     train_path = 'data/heart_scale.train'
     test_path = 'data/heart_scale.test'
@@ -273,6 +272,7 @@ if __name__ == '__main__':
     clf.train(X_train, Y_train)
     acc_train = clf.test(X_train, Y_train)
     acc_test  = clf.test(X_test, Y_test)
+
     print >> sys.stderr, 'Training accuracy for Pegasos : %lf%%' % (100 *  acc_train)
     print >> sys.stderr, 'Test accuracy for Pegasos : %lf%%' % (100 *  acc_test)
     
