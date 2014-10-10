@@ -2,6 +2,7 @@
 
 import sys
 import random
+import math
 import numpy as np
 from math import sqrt
 from common import read_dense_data
@@ -30,11 +31,16 @@ class LinearRegression:
         self.Y = Y
         self.lamb = lamb
 
-        w_init = np.matrix(np.zeros([n + 1, 1]))
+        w = np.matrix(np.zeros([n + 1, 1]))
 
+        '''
         opt = SGDOption()
-        self.w = SGD(self.cost, w_init, X, Y, opt, lamb = lamb)
-        # self.w = CG(self.cost, w_init, 200, X = X, Y = Y, lamb = lamb)
+        opt.mini_batch_size = 100
+        opt.eps = 1e-8
+
+        self.w = SGD(self.cost, w, X, Y, opt, lamb = lamb)
+        '''
+        self.w = CG(self.cost, w, 200, X = X, Y = Y, lamb = lamb)
         
         print 'Done with function evalution C = %d' % self.c
 
