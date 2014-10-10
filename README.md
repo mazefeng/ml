@@ -23,23 +23,10 @@ The default implementation is extremely slow.
 8. Support Vector Machines
 9. AdaBoost
 10. Matrix Factorization
-11. Neural Network
-12. Hidden Markov Models
-13. Optimization
-
-Here are candidate models considered to be added into this package: 
-
-1. K-means clustering
-2. Gaussian Mixture Models
-3. Hierachical clustering
-4. Principle Component Analysis
-5. Kernel Principle Component Analysis
-6. Factor Analysis
-7. Independent Component Analysis
-8. Bagging
-9. Random Forest
-10. Classification and Regression Tree
-11. Gradient Boosting Machines
+11. Hidden Markov Models
+12. Neural Network
+13. Deep Neural Network
+14. Optimization
 
 ##Naive Bayes
 
@@ -163,7 +150,7 @@ GDA is a generative model, it makes the following assumptions:
 Training a GDA model is simple, just do the Maximum Likelihood Estimation(MLE). 
 
 To make a prediction in the binary classification, 
-compute s=p(x|y=1)p(y=1)-p(x|y=0)*p(y=0), 
+compute s=p(x|y=1)p(y=1)-p(x|y=0)p(y=0), 
 when s>=0, predict y to be 1, otherwise, y is 0.
 
 Run `python gda.py` to train and test GDA model on `heart-scale` dataset
@@ -272,6 +259,11 @@ By combining `NumPy` with mini-batch, the training algorithm is very efficient w
 
 ##Neural Network
 
+nn.py implements a three layer `Neural Network model`(NN) for classification.
+
+NN is a powerful model motivated by how brain works.
+
+
 ##Hidden Markov Model
 
 hmm.py implements `Hidden Markov Models`(HMMs) for solving `sequence labeling` problem.
@@ -296,3 +288,9 @@ It is the right-wing guerrillas who are aligned with the drug traffickers , not 
 </code></pre>
 
 `TODO`: Parallel HMMs training, `Max Entropy Markov Models`(MEMM), `Conditional Random Field`(CRF)
+
+# Optimization
+
+
+
+For many ML models, 
