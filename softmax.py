@@ -28,14 +28,18 @@ class SoftmaxRegression:
         m, n = X.shape
  
         w = np.matrix(0.005 * np.random.random([O, n])).reshape(-1, 1)
-
+    
         opt = SGDOption()
-        # w_opt = CG(self.cost, w, X = X, Y = Y, lamb = lamb, O = O)
-        w_opt = SGD(self.cost, w, X, Y, opt, lamb = lamb, O = O)
+        opt.max_iter = 50
+        opt.mini_batch_size = 5000
+
+        # w_opt = SGD(self.cost, w, X, Y, opt, lamb = lamb, O = O)
+
+        w_opt = CG(self.cost, w, 80, X = X, Y = Y, lamb = lamb, O = O)
 
         self.w = w_opt.reshape(O, n)
 
-        print 'c = ', self.c
+        print >> sys.stderr, 'c = ', self.c
     
     def cost(self, w, X, Y, lamb, O):
 
