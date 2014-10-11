@@ -299,10 +299,25 @@ It is the right-wing guerrillas who are aligned with the drug traffickers , not 
 
 ## Optimization
 
-### Stochastic Gradient Descent(SGD)
+Most of the numerical optimization routines can be summarize as following steps:
 
-For many ML models, 
+1. Find the direction.
+2. (Optional) Modify this direction using extra infomation
+3. Find a step size to go as further as possiblem, often use a .
+4. Repeat step 1-3 until convergence.
+
+Algorithms including step-2 are categorized as second-order methods (such as Newton's method, Quasi-Newton's method),
+the others are first-order methods.
+
+The second-order methods converge faster, but they have to store and maintance a Hessian matrix, which is O(n^2) complexity.
+
+And there are methods trying to approximate the Hessian matrix using recent gradients, they belong to the Quasi-Newton's methods, such as Limited-memroy BFGS.
+
+### Stochastic Gradient Descent(SGD)
 
 ### Conjugate Gradient method(CG)
 
+### L-BFGS
+
+### OWL-QN
 
