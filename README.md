@@ -25,8 +25,7 @@ The default implementation is extremely slow.
 10. Matrix Factorization
 11. Hidden Markov Models
 12. Neural Network
-13. Deep Neural Network
-14. Optimization
+13. Optimization
 
 The following models and algorithms will be added into this package soon:
 
@@ -265,13 +264,6 @@ RMSE on the test data is `0.932806` after `5 iterations`.
 MF is optimized by `Stochastic Gradient Descent`(SGD) algorithm in mini-batch manner. 
 By combining `NumPy` with mini-batch, the training algorithm is very efficient with an affordable memory cost.
 
-##Neural Network
-
-nn.py implements a three layer `Neural Network model`(NN) for classification.
-
-NN is a powerful model motivated by how brain works.
-
-
 ##Hidden Markov Model
 
 hmm.py implements `Hidden Markov Models`(HMMs) for solving `sequence labeling` problem.
@@ -297,13 +289,21 @@ It is the right-wing guerrillas who are aligned with the drug traffickers , not 
 
 `TODO`: Parallel HMMs training, `Max Entropy Markov Models`(MEMM), `Conditional Random Field`(CRF)
 
+##Neural Network
+
+nn.py implements a three layer `Neural Network model`(NN) for classification.
+
+NN is a powerful model motivated by how brain works. Training a NN is a little complicated. In the feed-forward phrase, training data go through the input layer to the hidden layer, and finally the output layer. The error is computed between the output of the model and the ground-truth label. In the back-propogation phrase, the error is back-propogate reversely, from the output layer to the hidden layer, then to the input layer. When this is done, the gradient with respect to each individual weight is obtained and feed to the optimization routine.
+
+NN show its great power when we carefully tune its parameters. It is powerful, but not "off-the-shelf".For example, due the gradient vanish and explose  phenomenon, we have to carefully initialize the weight and normalize the input, just like what we do in the experiment, normalize each dimension to follow a normal distribution, and randomly initialize each weight to a small random number to do a symmetry-breaking.
+
 ## Optimization
 
 Most of the numerical optimization routines can be summarize as following steps:
 
 1. Find the direction.
 2. (Optional) Modify this direction using extra infomation
-3. Find a step size to go as further as possiblem, often use a .
+3. Find a step size to go as further as possiblem, often use a line search routine.
 4. Repeat step 1-3 until convergence.
 
 Algorithms including step-2 are categorized as second-order methods (such as Newton's method, Quasi-Newton's method),
