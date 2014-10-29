@@ -257,6 +257,7 @@ Accuracy for AdaBoost : `86.792453%`
 ##Collaborative Filtering
 
 cf.py implements the following three `Collaborative Filtering(CF)` algorithms for recommendation:
+
 1. Item-based Collaborative Filtering(ItemCF)
 2. User-based Collaborative Filtering(UserCF)
 3. Slope-One Collaborative Filtering(SlopeOneCF)
@@ -268,12 +269,14 @@ UserCF assumes that people who were interested in same items will still have sam
 SlopeOneCF is an upgrade version of ItemCF. It fits a simple linear model between each pair of items, trying to capture the rating between item A and item B by `rating(A) = rating(B) + b`, and that is how the name Slope-One comes from.
 
 To speed up when making a recommendation, it is necessary to store the pair-wise similarity between either users or items, 
-and this requires a memory cost of O(n^2) and will become unacceptable when n is large.
+and this requires a memory cost of `O(n^2)` and will become unacceptable when n is large.
 
 Run `python cf.py` to evaluate CF algorithms on the `100K` version of `MovieLens` dataset.
 
 RMSE for ItemCF on the test data: `1.035117`
+
 RMSE for UserCF on the test data: `1.028147`
+
 RMSE for SlopeOneCF on the test data: `0.946594`
 
 ##Matrix Factorization
