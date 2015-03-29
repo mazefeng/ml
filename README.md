@@ -287,8 +287,12 @@ Run `python mf.py` to train and test MF on the `1 million` version of `MovieLens
 
 RMSE on the test data is `0.932806` after `5 iterations`.
 
-MF is optimized by `Stochastic Gradient Descent`(SGD) algorithm in mini-batch manner. 
-By combining `NumPy` with mini-batch, the training algorithm is very efficient with an affordable memory cost.
+The latent factor model is learned by `Stochastic Gradient Descent`(SGD) algorithm. 
+
+There was a mistakte in the previous version in mf.py. SGD can not be implemented in mini-batch 
+since in each iteration the corresponding user and item latent factor need to updated, 
+and if you do mini-batch, the model get updated very rarely. 
+So I fix the problem and use multi-thread to accelerate the process.
 
 ##Hidden Markov Model
 

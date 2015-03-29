@@ -1,18 +1,23 @@
 import sys
-import random
+import json
+import time
 import math
+import random
 import pickle
+import threading  
 import numpy as np
+import matplotlib
+matplotlib.use('wx')
+import matplotlib.pylab as plt
 
 random.seed(1024)
-np.seterr(all = 'raise')
 
 class SparseMatrix:
 
     kv_dict = None
     rows = None
     cols = None
-    sum = 0.0
+    _sum = 0.0
     mean = 0.0
     
     def __init__(self, rows = None, cols = None):
@@ -28,7 +33,7 @@ class SparseMatrix:
         else:
             self.cols = dict(cols)
         
-        self.sum = 0.0
+        self._sum = 0.0
         self.mean = 0.0
 
     def __repr__(self):
@@ -38,7 +43,7 @@ class SparseMatrix:
         ret_str += '[INFO]: cols size: %d\n' % len(self.cols)
         ret_str += '[INFO]: #sparse kv_dict: %d\n' % len(self.kv_dict)
         ret_str += '[INFO]: mean: %f\n' % self.mean
-        ret_str += '[INFO]: sum: %f\n' % self.sum
+        ret_str += '[INFO]: sum: %f\n' % self._sum
         return ret_str
         
     def __len__(self):
@@ -46,8 +51,13 @@ class SparseMatrix:
 
     def __getitem__(self, index):
         r_index, c_index = index
-        if not r_index in rows or not c_index in cols: return 0.0
-        if not (rows[r_index], cols[c_index]) in kv_dict: return 0.0
+        
+        if not r_index in rows or not c_index in cols:
+            return 0.0
+        
+        if not (rows[r_index], cols[c_index]) in kv_dict:
+            return 0.0
+
         return 1.0 * self.kv_dict[rows[r_index], cols[c_index]]
     
     def __setitem__(self, index, value):
@@ -62,162 +72,239 @@ class SparseMatrix:
         col = self.cols[c_index]
 
         if not (row, col) in self.kv_dict:
-            self.sum = self.sum + value
+            self._sum += value
         else:
-            self.sum = self.sum - self.kv_dict[row, col] + value
+            self._sum += value - self.kv_dict[row, col]
 
         self.kv_dict[row, col] = value
-        self.mean = 1.0 * self.sum / len(self.kv_dict) if len(self.kv_dict) != 0 else 0.0
+
+        self.mean = 1.0 * self._sum / len(self.kv_dict) if len(self.kv_dict) != 0 else 0.0
     
-    
+
+class ParallelSGD(threading.Thread):
+
+    def __init__(self, name, model): 
+        threading.Thread.__init__(self)  
+        self.name = name
+        self.model = model
+        # self.v = np.matrix(np.zeros([(model.num_factor + 1) * 2, 1]))
+
+    def run(self):
+
+        while True:
+
+            self.model.thread_lock.acquire()
+
+            if self.model.current_sample >= len(self.model.L_train):
+                self.model.thread_lock.release()
+                break
+            (u, i), r = self.model.L_train[self.model.current_sample]
+            self.model.current_sample += 1
+
+            pu = self.model.P[u]
+            qi = self.model.Q[i]
+            bu = self.model.bu[u]
+            bi = self.model.bi[i]
+
+            self.model.thread_lock.release()
+        
+            r_pred = self.model.mu + bu + bi + float(pu * qi.T)
+            err = r - r_pred
+        
+            pu_update = pu + self.model.alpha * (err * qi - self.model._lambda * pu)
+            qi += self.model.alpha * (err * pu - self.model._lambda * qi)
+
+            bu += self.model.alpha * (err - self.model._lambda * bu)
+            bi += self.model.alpha * (err - self.model._lambda * bi)
+
+            self.model.thread_lock.acquire()
+ 
+            self.model.P[u] = pu_update
+            self.model.Q[i] = qi
+            self.model.bu[u] = bu
+            self.model.bi[i] = bi
+
+            self.model.sqr_err += err ** 2
+        
+            self.model.thread_lock.release()
+
 class MF:
 
-    user_factor = None
-    item_factor = None
-    user_bias = None
-    item_bias = None
-    mu = 0.0
+    # num_factor = 25, _lambda = 0.005, max_iter = 10, alpha = 0.01, num_thread = 40, validate = 0
+    def __init__(self, num_factor = 25, _lambda = 0.005, max_iter = 20, alpha = 0.01, num_thread = 10, validate = 0):
 
-    factor = 25
-    max_iter = 5
-    batch_size = 100000
-    rmse_thresold = 1e-6
-    alpha = 0.1
-    L1 = 0.0
-    L2 = 0.001
-    
-    def train(self, ratings):
-        
+        self.P = None
+        self.Q = None
+        self.bu = None
+        self.bi = None
+        self.mu = 0.0
+
+        self.rows = None   
+        self.cols = None
+ 
+        self.num_factor = num_factor
+        self._lambda = _lambda
+        self.max_iter = max_iter
+        self.alpha = alpha
+        self.num_thread = num_thread
+        self.validate = validate    
+
+        self.L_train = None
+        self.L_validate = None
+        self.sqr_err = 0.0
+        self.current_sample = 0
+        self.thread_lock = threading.Lock()
+ 
+    def train(self, ratings, model_path):
+ 
         self.mu = ratings.mean
-
-        self.user_factor = 0.001 * np.matrix(np.random.randn(len(ratings.rows), self.factor))
-        self.user_bias = 0.001 * np.matrix(np.random.randn(len(ratings.rows), 1))
+        self.P = 0.001 * np.matrix(np.random.randn(len(ratings.rows), self.num_factor))
+        self.bu = 0.001 * np.matrix(np.random.randn(len(ratings.rows), 1))
+        self.Q = 0.001 * np.matrix(np.random.randn(len(ratings.cols), self.num_factor))
+        self.bi = 0.001 * np.matrix(np.random.randn(len(ratings.cols), 1))
         
-        self.item_factor = 0.001 * np.matrix(np.random.randn(len(ratings.cols), self.factor))
-        self.item_bias = 0.001 * np.matrix(np.random.randn(len(ratings.cols), 1))
+        self.rows = dict(ratings.rows)
+        self.cols = dict(ratings.cols)       
 
-        L = ratings.kv_dict.items()
-        for i in range(self.max_iter):
+        if self.validate > 0:
+            T = ratings.kv_dict.items()
+            random.shuffle(T)
+            k = len(T) / self.validate
+            self.L_validate = T[0 : k]
+            self.L_train = T[k :]
+        else:
+            self.L_train = ratings.kv_dict.items()
 
-            lamb = self.alpha * (1.0 / math.sqrt(i + 1))
-           
-            random.shuffle(L)
-            R = np.matrix([I[1] for I in L]).T 
-            sqr_err = list()
-            
-            for s in range(0, len(L), self.batch_size):
-                mini_batch = L[s : s + self.batch_size]
-                r = R[s : s + self.batch_size]
-
-                uid = [I[0][0] for I in mini_batch]
-                iid = [I[0][1] for I in mini_batch]
+        rmse_train = [0.0] * self.max_iter
+        rmse_validate = [0.0] * self.max_iter       
  
-                base_line = self.mu + self.user_bias[uid] + self.item_bias[iid]
-                r_pred = base_line + np.sum(np.multiply(self.user_factor[uid], self.item_factor[iid]), 1)
+        for s in range(self.max_iter):
 
-                err = r - r_pred
-                
-                p = self.user_factor[uid]
-                q = self.item_factor[iid]
-                bu = self.user_bias[uid]
-                bi = self.item_bias[iid]
-                
-                p_grad = np.multiply(err, q) - self.L2 * p
-                p = p + lamb * p_grad
-                
-                q_grad = np.multiply(err, p) - self.L2 * q
-                q = q + lamb * q_grad
-                
-                bu_grad = err - self.L2 * bu
-                bi_grad = err - self.L2 * bi
-                
-                bu = bu + lamb * bu_grad
-                bi = bi + lamb * bi_grad
+            random.shuffle(self.L_train)
+            self.current_sample = 0
+            self.sqr_err = 0.0
 
-                self.user_factor[uid] = p
-                self.item_factor[iid] = q
-                self.user_bias[uid] = bu
-                self.item_bias[iid] = bi
-                
-                sqr_err.append(float(err.T * err) / self.batch_size)
-
-            rmse = math.sqrt(np.mean(np.matrix(sqr_err)))
-            sys.stderr.write('Iter: %4.4i    RMSE: %f\n' % (i + 1, rmse))
-
-            if i > 0 and i % 10 ==0: self.dump_model('model_%d' % (i))
+            self.threads = [ParallelSGD('Thread_%d' % n, self) for n in range(self.num_thread)]
             
-            if rmse < self.rmse_thresold: break
+            start = time.time()
+            for t in self.threads:
+                t.start()
+                t.join()
+            terminal = time.time()
+
+            duration = terminal - start
+
+            rmse_train[s] = math.sqrt(self.sqr_err / len(ratings.kv_dict))
     
-    def test(self, ratings):
-        L = ratings.kv_dict.items()
-        R = np.matrix([I[1] for I in L]).T 
-        sqr_err = list()
-       
-        au = len(ratings.rows) - len(self.user_factor)
-        self.user_factor = np.row_stack([self.user_factor, np.matrix(np.zeros([au, self.factor]))])
-        self.user_bias = np.row_stack([self.user_bias, np.matrix(np.zeros([au, 1]))])
- 
-        ai = len(ratings.cols) - len(self.item_factor)
-        self.item_factor = np.row_stack([self.item_factor, np.matrix(np.zeros([ai, self.factor]))])
-        self.item_bias = np.row_stack([self.item_bias, np.matrix(np.zeros([ai, 1]))])
- 
-        for s in range(0, len(L), self.batch_size):
-            mini_batch = L[s : s + self.batch_size]
-            r = R[s : s + self.batch_size]
+            if self.validate > 0:
+                m = SparseMatrix()
+                m.kv_dict = {k : v for (k, v) in self.L_validate}
+                rmse_validate[s] = float(self.test(m))
             
-            uid = [I[0][0] for I in mini_batch]
-            iid = [I[0][1] for I in mini_batch]
- 
-            base_line = self.mu + self.user_bias[uid] + self.item_bias[iid]
-            r_pred = base_line + np.sum(np.multiply(self.user_factor[uid], self.item_factor[iid]), 1)
+            sys.stderr.write('Iter: %4.4i' % (s + 1))
+            sys.stderr.write('\t[Train RMSE] = %f' % rmse_train[s])
+            if self.validate > 0:
+                sys.stderr.write('\t[Validate RMSE] = %f' % rmse_validate[s])
+            sys.stderr.write('\t[Duration] = %f' % duration)
+            sys.stderr.write('\t[Samples] = %d\n' % len(self.L_train))
 
-            err = r - r_pred
-            sqr_err.append(float(err.T * err) / self.batch_size)
-        
-        rmse = math.sqrt(np.mean(np.matrix(sqr_err)))
-        # sys.stderr.write('RMSE: %f\n' % (rmse))
-        
+            self.dump_model(model_path + '/' + 'model_%4.4i' % (s + 1))
+            self.dump_raw_model(model_path + '/' + 'model_%4.4i.raw_model' % (s + 1))
+
+        plt.subplot(111)
+        plt.plot(range(self.max_iter), rmse_train, '-og')
+        plt.plot(range(self.max_iter), rmse_validate, '-xb')
+        plt.show()
+            
+    def test(self, ratings):
+
+        U = np.matrix(np.zeros([len(ratings), self.num_factor]))
+        V = np.matrix(np.zeros([len(ratings), self.num_factor]))
+        b = np.matrix(np.zeros([len(ratings), 1]))
+
+        u_kv = dict()
+        v_kv = dict()
+
+        for s, (u, i) in enumerate(ratings.kv_dict):
+            if u < len(self.P): u_kv[s] = u
+            if i < len(self.Q): v_kv[s] = i
+
+        U[u_kv.keys()] = self.P[u_kv.values()]
+        V[v_kv.keys()] = self.Q[v_kv.values()]  
+      
+        b[u_kv.keys()] += self.bu[u_kv.values()]
+        b[v_kv.keys()] += self.bi[v_kv.values()]
+
+        R = np.matrix(ratings.kv_dict.values()).T
+        err = R - (np.multiply(U, V).sum(1) + b + self.mu)
+        rmse = math.sqrt(err.T * err / len(ratings))
+
         return rmse
+
+    def dump_raw_model(self, path):
+        fp_raw_model = open(path, 'w')
+
+        output = dict()
+        
+        for k, v in self.rows.items():
+            output['type'] = 'USER'
+            output['id'] = k
+            output['latent_factor'] = map(lambda x : round(x, 6), self.P[v].tolist()[0])
+            output['bias'] = round(float(self.bu[v]), 6)
+            print >> fp_raw_model, json.dumps(output)
+
+        for k, v in self.cols.items():
+            output['type'] = 'ITEM'
+            output['id'] = k
+            output['latent_factor'] = map(lambda x : round(x, 6), self.Q[v].tolist()[0])
+            output['bias'] = round(float(self.bi[v]), 6)
+            print >> fp_raw_model, json.dumps(output)
+            
+        fp_raw_model.close()
     
 
     def dump_model(self, path):
 
         fp_meta_data = open(path + '.meta', 'w')
         print >> fp_meta_data, self.mu
-        print >> fp_meta_data, self.user_factor.shape[0], self.user_factor.shape[1], self.user_factor.dtype
-        print >> fp_meta_data, self.user_bias.shape[0], self.user_bias.shape[1], self.user_bias.dtype
-        print >> fp_meta_data, self.item_factor.shape[0], self.item_factor.shape[1], self.item_factor.dtype
-        print >> fp_meta_data, self.item_bias.shape[0], self.item_bias.shape[1], self.item_bias.dtype
+        print >> fp_meta_data, self.P.shape[0], self.P.shape[1], self.P.dtype
+        print >> fp_meta_data, self.bu.shape[0], self.bu.shape[1], self.bu.dtype
+        print >> fp_meta_data, self.Q.shape[0], self.Q.shape[1], self.Q.dtype
+        print >> fp_meta_data, self.bi.shape[0], self.bi.shape[1], self.bi.dtype
+        print >> fp_meta_data, json.dumps(self.rows)
+        print >> fp_meta_data, json.dumps(self.cols)
         fp_meta_data.close()
         
-        self.user_factor.tofile(path + '.uf')
-        self.user_bias.tofile(path + '.ub')
-        self.item_factor.tofile(path + '.if')
-        self.item_bias.tofile(path + '.ib')
+        self.P.tofile(path + '.uf')
+        self.bu.tofile(path + '.ub')
+        self.Q.tofile(path + '.if')
+        self.bi.tofile(path + '.ib')
 
     def load_model(self, path):
         fp_meta_data = open(path + '.meta')
         self.mu = float(fp_meta_data.readline())
 
         r, c, dtype = fp_meta_data.readline().split()
-        self.user_factor = np.matrix(np.fromfile(path + '.uf', dtype = np.dtype(dtype)))
-        self.user_factor.shape = (int(r), int(c))
+        self.P = np.matrix(np.fromfile(path + '.uf', dtype = np.dtype(dtype)))
+        self.P.shape = (int(r), int(c))
 
         r, c, dtype = fp_meta_data.readline().split()
-        self.user_bias = np.matrix(np.fromfile(path + '.ub', dtype = np.dtype(dtype)))
-        self.user_bias.shape = (int(r), int(c))
+        self.bu = np.matrix(np.fromfile(path + '.ub', dtype = np.dtype(dtype)))
+        self.bu.shape = (int(r), int(c))
 
         r, c, dtype = fp_meta_data.readline().split()
-        self.item_factor = np.matrix(np.fromfile(path + '.if', dtype = np.dtype(dtype)))
-        self.item_factor.shape = (int(r), int(c))
+        self.Q = np.matrix(np.fromfile(path + '.if', dtype = np.dtype(dtype)))
+        self.Q.shape = (int(r), int(c))
 
         r, c, dtype = fp_meta_data.readline().split()
-        self.item_bias = np.matrix(np.fromfile(path + '.ib', dtype = np.dtype(dtype)))
-        self.item_bias.shape = (int(r), int(c))
+        self.bi = np.matrix(np.fromfile(path + '.ib', dtype = np.dtype(dtype)))
+        self.bi.shape = (int(r), int(c))
+
+        self.rows = json.loads(fp_meta_data.readline())
+        self.cols = json.loads(fp_meta_data.readline())
 
         fp_meta_data.close()
            
-
 def read_sparse_matrix(fp_data, rows = None, cols = None):
     m = SparseMatrix(rows, cols)
     for line in fp_data:
@@ -231,24 +318,28 @@ def read_sparse_matrix(fp_data, rows = None, cols = None):
 if __name__ == '__main__':
  
     train_data = 'data/movielens.1m.train'
+    # train_data = '/home/mazefeng/movielens/ra.train'
     test_data = 'data/movielens.1m.test'
+    # test_data = '/home/mazefeng/movielens/ra.test'
 
     train_ratings = read_sparse_matrix(open(train_data))
     print >> sys.stderr, 'read training sparse matrix done.'
     test_ratings = read_sparse_matrix(open(test_data), train_ratings.rows, train_ratings.cols)
     print >> sys.stderr, 'read test sparse matrix done.'
 
+    print >> sys.stderr, train_ratings
+    print >> sys.stderr, test_ratings
+
     # pickle.dump(train_ratings, open('train_ratings.pkl', 'w'))
     # pickle.dump(test_ratings, open('test_ratings.pkl', 'w'))
     # ratings = pickle.load(open('ratings.pkl'))
 
     mf = MF()
-    mf.train(train_ratings)
+    mf.train(train_ratings, 'mf_model')
 
     rmse_train = mf.test(train_ratings)
     rmse_test = mf.test(test_ratings)
     
     print >> sys.stderr, 'Training RMSE for MovieLens 1m dataset: %lf' % rmse_train
     print >> sys.stderr, 'Test RMSE for MovieLens 1m dataset: %lf' % rmse_test
-
 
